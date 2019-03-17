@@ -1,5 +1,4 @@
 require 'hashdata'
-require 'toml-rb'
 
 RSpec.describe HashData do
   TomlRB.load_file('data/fixtures.toml').each do |input, expected|
