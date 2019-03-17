@@ -1,15 +1,14 @@
 require 'hashdata'
-require 'rspec'
+require 'toml-rb'
 
-# Generated using the python "crypt" library for the string 'hashdata' with a salt of 'hashdata':
-# >> python version 2.7.1<<
-# import crypt
-# crypt.crypt('hashdata','hashdata')
-describe HashData do
-  it 'recognizes a DES(UNIX) hash' do
-    HashData.new.check_type('haLgYBnzoVJi6','DES(Unix)').should eq(true)
+RSpec.describe HashData do
+  TomlRB.load_file('data/fixtures.toml').each do |input, expected|
+    it "#{input.inspect} matches #{expected.inspect}" do
+      expect(HashData.new.check(input)).to eq expected.join(', ')
+    end
   end
-  it 'recognizes Base64 encoded strings' do
-    HashData.new.check_type('aGVsbG90aGVyZQ==','Base64').should eq(true)
+
+  it 'returns an empty string when there are no matching hashes' do
+    expect(HashData.new.check('not a matching hash')).to be_empty
   end
 end
